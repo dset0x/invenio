@@ -146,17 +146,27 @@ Just like you would do with subversion branches.
 
 .. code-block:: console
 
-    $ mkdir -p $HOME/bin
-    $ which git-new-workdir || { \
-         wget https://raw.github.com/git/git/master/contrib/workdir/git-new-workdir \
-         -O $HOME/bin/git-new-workdir; chmod +x $HOME/bin/git-new-workdir; }
+    $  command -v git-new-workdir >/dev/null 2>&1 || \
+            install -D /usr/share/doc/git/contrib/workdir/git-new-workdir $HOME/bin/git-new-workdir
 
-**NOTE:** Check that ``~/bin`` is in your ``$PATH``.
+
+**NOTE:** For this to work ``~/bin`` needs to be in your ``$PATH``.
 
 .. code-block:: console
 
-    $ export PATH+=:$HOME/bin
+    $ [[ ":$PATH:" == *":$HOME/bin:"* ]] && \
+        echo "$HOME/bin" already exists in PATH! || \
+        echo "$HOME/bin" does not exist in PATH!
+    
+If it is not, you should add it to your shell's initializtion file and then
+source it so that the changes take place immediately. The following snippet
+should work for zsh and bash. You may need to adjust the location of the
+initialization file if you are using a different shell
 
+.. code-block:: console
+    
+    $ myshell=$(/bin/ps --no-headers -p $$ | cut -d' ' -f6)
+    $ echo 'export PATH+=:$HOME/bin' >> "$HOME/.${myshell}rc"
 
 3. Quick instructions for the impatient Invenio developer
 ---------------------------------------------------------
